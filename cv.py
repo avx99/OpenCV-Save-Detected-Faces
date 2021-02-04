@@ -8,12 +8,18 @@ from json import JSONEncoder
 import os
 import shutil
 
-Known_distance = 30
+Known_distance = 30 
 Known_width =14.3 
 GREEN = (0,255,0)
 RED = (0,0,255)
 WHITE = (255,255,255)
 fonts = cv2.FONT_HERSHEY_COMPLEX
+
+class NumpyArrayEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return JSONEncoder.default(self, obj)
 
 
 def FocalLength(measured_distance, real_width, width_in_rf_image):
@@ -42,10 +48,16 @@ faceCascade = cv2.CascadeClassifier('src/cascades/data/haarcascade_frontalface_a
 d={}
 i = 0
 Focal_length_found = FocalLength(Known_distance, Known_width, 5)
-shutil.rmtree('images')
-os.remove("date.txt")
-os.remove("distance.txt")
+if os.path.isdir('images'):    
+    shutil.rmtree('images')
+if os.path.isfile("date.txt"):
+    os.remove("date.txt")
+if os.path.isfile("distance.txt"):
+    os.remove("distance.txt")
+
 os.mkdir("images")
+f = open("distance.txt", "w")
+f = open("date.txt", "w")
 while(True):
     ret,frame = cap.read()
     grayFrame = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
