@@ -8,18 +8,12 @@ from json import JSONEncoder
 import os
 import shutil
 
-Known_distance = 30 #centimeter
+Known_distance = 30
 Known_width =14.3 
 GREEN = (0,255,0)
 RED = (0,0,255)
 WHITE = (255,255,255)
 fonts = cv2.FONT_HERSHEY_COMPLEX
-
-class NumpyArrayEncoder(JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        return JSONEncoder.default(self, obj)
 
 
 def FocalLength(measured_distance, real_width, width_in_rf_image):
